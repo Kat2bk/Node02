@@ -112,6 +112,39 @@ router.post('/', (req, res) => {
 //   - return HTTP status code `200` (OK).
 //   - return the newly updated _post_.
 
+router.put('/:id', (req, res) => {
+    const {id} = req.params;
+
+    const updatedPost = {
+        title: req.body.title,
+        contents: req.body.contents
+    }
+
+    if (!updatedPost.title || !updatedPost.contents) {
+        res.status(400).json({
+            message: "Please provide title and contents for the post"
+        })
+    } else {
+        Posts.update(id, updatedPost)
+        .then(post => {
+            if (post) {
+                res.status(200).json(post)
+            } else {
+                res.status(404).json({
+                    message: "The post with the specified ID does not exist"
+                })
+            }
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({
+                error: "The post information could not be modified"
+            })
+        })
+        
+    }
+})
+
 // #### 5 [DELETE] /api/posts/:id
 
 // - If the _post_ with the specified `id` is not found:
