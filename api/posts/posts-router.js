@@ -157,6 +157,27 @@ router.put('/:id', (req, res) => {
 //   - respond with HTTP status code `500`.
 //   - return the following JSON: `{ message: "The post could not be removed" }`.
 
+router.delete('/:id', (req, res) => {
+    const {id} = req.params;
+
+    if (!id) {
+        return res.status(404).json({
+            message: "The post with the specified ID does not exist"
+        })
+    } else {
+        Posts.remove(id)
+        .then(post => {
+            res.status(204).json(post)
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({
+                error: "The post could not be removed" 
+            })
+        })
+    }
+})
+
 // #### 6 [GET] /api/posts/:id/comments
 
 // - If the _post_ with the specified `id` is not found:
