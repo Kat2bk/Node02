@@ -190,6 +190,27 @@ router.delete('/:id', (req, res) => {
 //   - respond with HTTP status code `500`.
 //   - return the following JSON: `{ message: "The comments information could not be retrieved" }`.
 
+router.get('/:id/comments', (req, res) => {
+    const {id} = req.params;
+
+    Posts.findCommentById(id)
+    .then(comments => {
+        if (!comments) {
+            res.status(404).json({
+                message: "The post with the specified ID does not exist" 
+            })
+        } else {
+            res.status(200).json(comments)
+        }
+    })
+    .catch(error => {
+        console.log(error)
+        res.status(500).json({
+            error: "Unable to retrieve comments"
+        })
+    })
+})
+
 module.exports = router;
 
 
